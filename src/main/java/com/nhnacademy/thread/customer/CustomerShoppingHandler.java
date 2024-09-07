@@ -78,6 +78,9 @@ public class CustomerShoppingHandler implements Runnable {
             }catch (InterruptedException ie){
                 Thread.currentThread().interrupt();
             }catch (Exception e){
+                if(e.getMessage().contains(InterruptedException.class.getName())) {
+                    Thread.currentThread().interrupt();
+                }
                 log.debug("shopping : {}",e.getMessage(),e);
             }finally {
                 //TODO#9-1-5 해당 Thread는 checkoutChannel(결제 대기열)에 등록 후 customerLocal, cartLocal 초기화
