@@ -28,7 +28,7 @@ public class Customer {
 
     public Customer(long id, String name, int money) {
         //TODO#1-1 id < 1 or name null or ""  or money <0 이면 IllegalArgumentException 이 발생 합니다.
-        if (id < 1 || (name == null || name.equals("")) || money < 0){
+        if (id < 1 || (name == null || name.isEmpty()) || money < 0){
             throw new IllegalArgumentException();
         }
 
@@ -56,8 +56,8 @@ public class Customer {
 
 
     public void pay(int amount) throws InsufficientFundsException {
-        //TODO#1-6 money(회원 보유금액) < 0 IllegalArgumentException이 발생 합니다.
-        if (money < 0){
+        //TODO#1-6 amount < 0 IllegalArgumentException이 발생 합니다.
+        if (amount < 0){
             throw new IllegalArgumentException();
         }
         //TODO#1-7  money(회원 보유금액) < amount(결제할 금액)이면 InsufficientFundsException 이 발생 합니다.
