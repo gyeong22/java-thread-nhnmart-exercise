@@ -54,8 +54,9 @@ public class Customer {
     }
 
 
+
     public void pay(int amount) throws InsufficientFundsException {
-        //TODO#1-6 money(회원 보유금액) < amount(결제할 금액) IllegalArgumentException이 발생 합니다.
+        //TODO#1-6 money(회원 보유금액) < 0 IllegalArgumentException이 발생 합니다.
         if (money < 0){
             throw new IllegalArgumentException();
         }
