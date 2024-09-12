@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
 
 @Slf4j
 public class CsvProductParser implements ProductParser {
@@ -38,12 +39,14 @@ public class CsvProductParser implements ProductParser {
 
     public CsvProductParser() {
         //TODO#6-2-1 기본생성자 구현 , getProductsStream()을 이용해서 inputStream을 초기화 합니다.
-        inputStream = null;
+        inputStream = getProductsStream();
     }
 
     public CsvProductParser(InputStream inputStream){
         //TODO#6-2-2 inputStream prameter로 전달 됩니다. 초기화 합니다.
-        this.inputStream = null;
+        if (inputStream == null)
+            throw new IllegalArgumentException();
+        this.inputStream = inputStream;
     }
 
     @Override
@@ -55,6 +58,26 @@ public class CsvProductParser implements ProductParser {
          */
         List<Product> products = new ArrayList<>();
 
+        try {
+            Scanner scanner = new Scanner(inputStream);
+            scanner.nextLine();
+            while(scanner.hasNext()){
+                String [] data = scanner.nextLine().split(",");
+                int id = 0;
+                String item = data[1];
+                String maker = data[2];
+                String specification = data[3];
+                String unit = data[4];
+                int price = Integer.parseInt(data[5].replace(",",""));
+                log.debug("product  item :  {}, maker :  {},  price: {}", item, maker, price);
+
+                Product product = new Product(id, item, maker, specification, unit, price, 1);
+                products.add(product);
+            }
+
+        }catch (Exception e){
+
+        }
 
         return products;
     }
@@ -62,6 +85,7 @@ public class CsvProductParser implements ProductParser {
     @Override
     public void close() throws IOException {
         //TODO#6-2-5 inputStream 객체가 존재하면 close() method를 호출해서 자원을 해지 합니다.
-        
+        if (inputStream != null)
+            inputStream.close();
     }
 }
