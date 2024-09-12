@@ -69,10 +69,11 @@ class CustomerGeneratorTest {
         Assertions.assertAll(
             ()->{
                 //TODO#4-11 interrupt발생시 customerGeneratorThread 의 상태가  TERMINATED 상태인지 검증
+                Assertions.assertEquals(Thread.State.TERMINATED, customerGeneratorThread.getState());
             },
             ()->{
                 //TODO#4-12 enteringQueue(대기열) 최대 Queue Size가 5 <-- 10초 동안 최대 5명의 고객이 대기열에 등록되었는지 검증 합니다.
-
+                Assertions.assertEquals(5, enteringQueue.getQueueSize());
             }
         );
     }

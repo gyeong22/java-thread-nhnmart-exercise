@@ -28,7 +28,7 @@ public class Customer {
 
     public Customer(long id, String name, int money) {
         //id < 1 or name null or ""  or money <0 이면 IllegalArgumentException 이 발생 합니다.
-        if(id<1 || StringUtils.isEmpty(name) || money < 0 ){
+        if(id<0 || StringUtils.isEmpty(name) || money < 0 ){
             throw new IllegalArgumentException();
         }
 

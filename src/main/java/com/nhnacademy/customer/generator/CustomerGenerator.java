@@ -42,7 +42,7 @@ public class CustomerGenerator implements Runnable {
 
         //TODO#4-2 enteringQueue, atomicId 를 0으로 초기화 합니다.
         this.enteringQueue = enteringQueue;
-        atomicId= new AtomicLong(0);
+        atomicId= new AtomicLong();
 
     }
 
@@ -54,7 +54,7 @@ public class CustomerGenerator implements Runnable {
             - 1초 간격으로 회원을 entringQueue의 대기열에 등록 합니다.
         */
 
-        long add_time = System.currentTimeMillis();
+
         while (!Thread.currentThread().isInterrupted()){
             //1초 간격으로 회원을 entringQueue의 대기열에 등록 합니다.
             Customer customer = generate();

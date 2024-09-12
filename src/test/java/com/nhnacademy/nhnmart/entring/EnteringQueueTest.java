@@ -96,6 +96,7 @@ class EnteringQueueTest {
         });
         consumer.start();
 
+
         //producer or consumer 실행 중이라면 대기 합니다. yield()를 이용해서 구현하세요.
         while (producer.isAlive() || consumer.isAlive()){
             Thread.yield();
