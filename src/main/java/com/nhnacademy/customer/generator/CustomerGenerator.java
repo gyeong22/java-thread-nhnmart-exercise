@@ -80,7 +80,7 @@ public class CustomerGenerator implements Runnable {
         Fairy fairy = Fairy.create();
         Person person = fairy.person();
 
-        Customer customer = new Customer(atomicId.get(), person.getFullName(), 1000);
+        Customer customer = new Customer(atomicId.incrementAndGet(), person.getFullName(), 1000);
         return customer;
     }
 }
