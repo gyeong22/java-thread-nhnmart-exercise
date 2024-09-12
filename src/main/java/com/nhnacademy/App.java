@@ -28,5 +28,6 @@ public class App {
 
         //TODO#5-3 enteringThread의 이름을 'entering-thread'로 설정, enteringThread를 시작 합니다.
         enteringThread.setName("entering-thread");
+        enteringThread.start();
     }
 }

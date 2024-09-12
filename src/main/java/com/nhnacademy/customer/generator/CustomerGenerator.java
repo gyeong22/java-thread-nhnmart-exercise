@@ -43,7 +43,7 @@ public class CustomerGenerator implements Runnable {
 
         //enteringQueue, atomicId 를 0으로 초기화 합니다.
         this.enteringQueue = enteringQueue;
-        atomicId=new AtomicLong(0);
+        atomicId=new AtomicLong();
 
     }
 
