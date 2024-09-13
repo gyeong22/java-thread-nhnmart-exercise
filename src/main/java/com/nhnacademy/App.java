@@ -14,6 +14,7 @@ package com.nhnacademy;
 
 import com.nhnacademy.customer.generator.CustomerGenerator;
 import com.nhnacademy.nhnmart.entring.EnteringQueue;
+import com.nhnacademy.nhnmart.product.domain.Product;
 import com.nhnacademy.nhnmart.product.parser.ProductParser;
 import com.nhnacademy.nhnmart.product.parser.impl.CsvProductParser;
 import com.nhnacademy.nhnmart.product.repository.ProductRepository;
@@ -37,11 +38,11 @@ public class App
         enteringThread.start();
 
         //TODO#7-1 MemoryProductRepository 구현체를 이용해서 ProductRepository 객체를 생성 합니다.
-        ProductRepository productRepository = null;
+        ProductRepository productRepository = new MemoryProductRepository();
         //TODO#7-2 CsvProductParser 구현체를 이용해서 ProductParser 객체를 생성 합니다.
-        ProductParser productParser = null;
+        ProductParser productParser = new CsvProductParser();
         //TODO#7-3 ProductServiceImpl 구현체를 이용해서 ProductService 객체를 생성 합니다.
-        ProductService productService = null;
+        ProductService productService = new ProductServiceImpl(productRepository, productParser);
 
     }
 }
