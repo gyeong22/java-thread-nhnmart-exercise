@@ -19,6 +19,7 @@ import com.nhnacademy.nhnmart.product.exception.ProductNotFoundException;
 import com.nhnacademy.nhnmart.product.parser.ProductParser;
 import com.nhnacademy.nhnmart.product.repository.ProductRepository;
 import com.nhnacademy.nhnmart.product.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import java.util.Optional;
     - service에서는 repository로 부터 데이터의 CRUD 작업을 수행 합니다. 수행하는 과정에서 발생할 수 있는 로직 및 예외를 처리하는 역할을 합니다.
 
 */
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     //product 저장소
@@ -40,21 +42,23 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductServiceImpl(ProductRepository productRepository, ProductParser productParser) {
         //TODO#6-5-1 productRepository or productParser null이면 IllegalArgumentException 발생 됩니다.
-
+        if (productRepository == null || productParser == null)
+            throw new IllegalArgumentException();
 
         //TODO#6-5-2 productRepository, productParser 초기화 합니다.
-        this.productRepository = null;
-        this.productParser = null;
+        this.productRepository = productRepository;
+        this.productParser = productParser;
 
         //TODO#6-5-3 init() method를 호출하여 초기화 합니다.
-
+        init();
     }
 
     private void init(){
         //TODO#6-5-4 productParser.parse()를 호출하고 반환된 List<Product> products를 productRepository를 통해서 memory 저장소에 저장 합니다.
-        List<Product> products = null;
+        List<Product> products = productParser.parse();
         for(Product product : products){
             //save
+            productRepository.save(product);
         }
     }
 
@@ -63,7 +67,11 @@ public class ProductServiceImpl implements ProductService {
         /* TODO#6-5-5 id에 해당되는 product를 반환 합니다.
             - product가 존재하지 않다면 ProductNotFoundException이 발생 합니다.
         */
-        return null;
+        if (!productRepository.existById(id)) {
+            throw new ProductNotFoundException(id);
+        }
+
+        return productRepository.findById(id).get();
     }
 
     @Override
@@ -84,13 +92,17 @@ public class ProductServiceImpl implements ProductService {
         /* TODO#6-5-7 id에 해당되는 product를 삭제 합니다.
             - id에 해당되는 제품이 존재하지 않다면 ProductNotFoundException 발생 합니다.
         */
+        if (!productRepository.existById(id)) {
+            throw new ProductNotFoundException(id);
+        }
 
+        productRepository.deleteById(id);
     }
 
     @Override
     public long getTotalCount() {
         //TODO#6-5-8 전체 product의 수를 반환 합니다.
-        return 0l;
+        return productRepository.count();
     }
 
     @Override
@@ -98,6 +110,11 @@ public class ProductServiceImpl implements ProductService {
         /*TODO#6-5-9 id에 해당되는 제품의 수량을 수정 합니다.
             - id에 해당되는 제품이 존재하지 않다면 ProductNotFoundException 발생 합니다.
         */
+        if (!productRepository.existById(id)){
+            throw new ProductNotFoundException(id);
+        }
+
+        productRepository.updateQuantityById(id, quantity);
 
     }
 
@@ -109,7 +126,14 @@ public class ProductServiceImpl implements ProductService {
             - 조회 : getProduct(id)
             - 수량 변경 : updateQuantity(id, product.getQuantity()-quantity)
          */
-        Product product = null;
+        Product product = getProduct(id);
+
+        if (product.getQuantity() < quantity)
+            throw new OutOfStockException(id);
+
+        updateQuantity(id, product.getQuantity() - quantity);
+
+
 
     }
 
@@ -121,8 +145,10 @@ public class ProductServiceImpl implements ProductService {
             - 조회 : getProduct(id)
             - 수량 변경 : updateQuantity(id, product.getQuantity()-quantity)
          */
-        Product product = null;
-        int updateQuantity  = 0;
+        Product product = getProduct(id);
+        int updateQuantity  = product.getQuantity() + quantity;
+        updateQuantity(id, updateQuantity);
+
 
         return updateQuantity;
     }

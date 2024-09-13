@@ -84,6 +84,6 @@ class CsvProductParserTest {
         }
 
         //TODO#6-2-9 actual 과 excepted 일치 하는지 검증 합니다.
-
+        Assertions.assertEquals(actual, excepted);
     }
 }

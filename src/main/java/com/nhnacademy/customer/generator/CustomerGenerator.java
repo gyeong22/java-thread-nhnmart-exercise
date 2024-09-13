@@ -33,43 +33,44 @@ public class CustomerGenerator implements Runnable {
     private final AtomicLong atomicId;
 
     //회원이 보유한 default money
-    private final static int DEFAULT_MONEY=100_0000;
+    private final static int DEFAULT_MONEY=10_00000;
 
     public CustomerGenerator(EnteringQueue enteringQueue) {
-        //enteringQueue null 이면 'IllegalArgumentException' 발생하는지 검증 합니다.
-        if(Objects.isNull(enteringQueue)){
-            throw new IllegalArgumentException("enteringQueue is null!");
-        }
+        //TODO#4-1 enteringQueue null 이면 'IllegalArgumentException' 발생하는지 검증 합니다.
+        if (enteringQueue == null)
+            throw new IllegalArgumentException();
 
-        //enteringQueue, atomicId 를 0으로 초기화 합니다.
+        //TODO#4-2 enteringQueue, atomicId 를 0으로 초기화 합니다.
         this.enteringQueue = enteringQueue;
-        atomicId=new AtomicLong(0);
+        atomicId= new AtomicLong();
 
     }
 
     @Override
     public void run() {
 
-        /*generate() method를 이용해서 customer를 생성하고 enteringQueue에 등록 합니다.
+        /*TODO#4-4 generate() method를 이용해서 customer를 생성하고 enteringQueue에 등록 합니다.
             - while 조건을 수정하세요.
+            - 1초 간격으로 회원을 entringQueue의 대기열에 등록 합니다.
         */
-        while (!Thread.currentThread().isInterrupted()){
-            try {
-                //1초 간격으로 회원을 entringQueue의 대기열에 등록 합니다.
-                Thread.sleep(1000);
 
-                Customer customer = generate();
-                enteringQueue.addCustomer(customer);
-                log.debug("generate-customer:{}",customer);
-            } catch (InterruptedException e) {
+
+        while (!Thread.currentThread().isInterrupted()){
+            //1초 간격으로 회원을 entringQueue의 대기열에 등록 합니다.
+            Customer customer = generate();
+            enteringQueue.addCustomer(customer);
+            try {
+                Thread.sleep(1000);
+            }catch (InterruptedException e){
                 Thread.currentThread().interrupt();
             }
+
         }
     }
 
     private Customer generate(){
 
-        /*Customer 객체를 생성 후 반환 합니다.
+        /*TODO#4-3 Customer 객체를 생성 후 반환 합니다.
             - customer->id 는 atomicId를 사용하여 구현
             - 회원이름은 random으로 생성 됩니다.
                - 회원이름 생성시 https://github.com/Devskiller/jfairy 이용해서 구현 합니다.
@@ -77,9 +78,8 @@ public class CustomerGenerator implements Runnable {
 
         Fairy fairy = Fairy.create();
         Person person = fairy.person();
-        long id = atomicId.incrementAndGet();
-        String name = person.getFullName();
-        Customer customer = new Customer(id,name,DEFAULT_MONEY);
+
+        Customer customer = new Customer(atomicId.incrementAndGet(), person.getFullName(), 1000);
         return customer;
     }
 }

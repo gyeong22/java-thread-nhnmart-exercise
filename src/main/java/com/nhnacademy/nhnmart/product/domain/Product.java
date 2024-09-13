@@ -46,7 +46,7 @@ public class Product {
 
     public Product(long id, String item, String maker, String specification, String unit, int price, int quantity) {
         //TODO#6-1-1 product 생성자의 parameter 검증을 통과하지 못한다면 IllegalArgumentException이 발생 됩니다.
-        if (id < 0 || hasText(item) || hasText(maker) || hasText(specification) || hasText(unit) || price <0 || quantity <0)
+        if (id < 0 || hasText(item) || hasText(maker) || StringUtil.isNullOrEmpty(specification) || StringUtils.isEmpty(unit) || price <0 || quantity <0)
             throw new IllegalArgumentException();
 
 
@@ -117,7 +117,7 @@ public class Product {
 
         Product product = (Product) o;
 
-        return id == product.id;
+        return id == product.id && item.equals(product.item) && maker.equals(product.maker) && specification.equals(product.specification);
     }
 
     //TODO#6-1-12 hashCode를 구현합니다.

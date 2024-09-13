@@ -15,6 +15,7 @@ package com.nhnacademy.nhnmart.product.repository.impl;
 import com.nhnacademy.nhnmart.product.domain.Product;
 import com.nhnacademy.nhnmart.product.repository.ProductRepository;
 
+import javax.swing.text.html.Option;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,42 +34,44 @@ public class MemoryProductRepository implements ProductRepository {
     @Override
     public void save(Product product) {
         //TODO#6-4-1 product 저장
-
+        productConcurrentMap.put(product.getId(), product);
     }
     @Override
     public Optional<Product> findById(long id) {
         //TODO#6-4-2 id에 해당되는 product 조회
-        return null;
+
+        //ofNullable()
+        return Optional.of(productConcurrentMap.get(id));
     }
 
     @Override
     public void deleteById(long id) {
         //TODO#6-4-3 id에 해당하는 product 삭제
-
+        productConcurrentMap.remove(id, productConcurrentMap.get(id));
     }
 
     @Override
     public boolean existById(long id) {
         //TODO#6-4-4 id에 해당하는 product 존재여부를 체크해서 반환 합니다.
-        return false;
+        return productConcurrentMap.containsKey(id);
     }
 
     @Override
     public long count() {
         //TODO#6-4-5 전체 product 수 반환
-        return 0;
+        return productConcurrentMap.size();
     }
 
     @Override
     public int countQuantityById(long id) {
         //TODO#6-4-6 id에 해당되는 product의 수량 반환(즉 제고 확인)
-        return 0;
+        return productConcurrentMap.get(id).getQuantity();
     }
 
     @Override
     public void updateQuantityById(long id, int quantity) {
         //TODO#6-4-7 id에 해당되는 product의 수량 변경
-
+        productConcurrentMap.get(id).setQuantity(quantity);
     }
 
 }

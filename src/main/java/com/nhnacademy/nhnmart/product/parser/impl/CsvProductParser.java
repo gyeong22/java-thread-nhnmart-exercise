@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 public class CsvProductParser implements ProductParser {
@@ -36,6 +37,7 @@ public class CsvProductParser implements ProductParser {
     //제품의 가본 수량  = 100개
     private final int DEFAULT_QUANTITY=100;
     private final InputStream inputStream;
+
 
     public CsvProductParser() {
         //TODO#6-2-1 기본생성자 구현 , getProductsStream()을 이용해서 inputStream을 초기화 합니다.
@@ -61,22 +63,23 @@ public class CsvProductParser implements ProductParser {
         try {
             Scanner scanner = new Scanner(inputStream);
             scanner.nextLine();
+            int id =1;
             while(scanner.hasNext()){
-                String [] data = scanner.nextLine().split(",");
-                int id = 0;
-                String item = data[1];
-                String maker = data[2];
-                String specification = data[3];
-                String unit = data[4];
-                int price = Integer.parseInt(data[5].replace(",",""));
-                log.debug("product  item :  {}, maker :  {},  price: {}", item, maker, price);
+                String [] data = scanner.nextLine().split(",",5);
 
-                Product product = new Product(id, item, maker, specification, unit, price, 1);
+                String item = data[0];
+                String maker = data[1];
+                String specification = data[2];
+                String unit = data[3];
+                int price = Integer.parseInt(data[4].replace(",","").replace("\"", ""));
+                Product product = new Product(ProductIdGenerator.getNewId(), item, maker, specification, unit, price, 100);
                 products.add(product);
+                id++;
             }
 
         }catch (Exception e){
-
+            log.error(e.toString());
+            throw new CsvParsingException();
         }
 
         return products;
