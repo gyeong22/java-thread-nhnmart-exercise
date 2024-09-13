@@ -26,23 +26,28 @@ public class RequestChannel {
 
     public RequestChannel(){
         //TODO#8-2-1 기본생성자 - DEFAULT_QUEUE_SIZE 기반으로 QUEUE를 생성 합니다.
-        requestQueue = null;
-        this.queueSize=0;
+        requestQueue = new LinkedList<>();
+        this.queueSize= DEFAULT_QUEUE_SIZE;
     }
 
     public RequestChannel(long queueSize) {
         //TODO#8-2-2 queueSize<0 이면 IllegalArgumentException 발생 합니다.
-
+        if (queueSize < 0)
+            throw new IllegalArgumentException();
 
         //TODO#8-2-3 queueSize, requestQueue를 초기화 합니다.
-        this.queueSize = 0;
-        this.requestQueue = null;
+        this.queueSize = queueSize;
+        this.requestQueue = new LinkedList<>();
     }
 
     public synchronized void addRequest(Executable executable){
         //TODO#8-2-4 while 조건을 수정하세요.  requestQueue.size() >= queueSize 대기 합니다.
-        while(true){
+        while(requestQueue.size() >= queueSize){
+            try {
+                wait();
+            }catch (InterruptedException e){
 
+            }
         }
 
         //TODO#8-2-5 requestQueue에  executable(작업) 추가하고 대기하고 있는 thread를 깨웁니다.
