@@ -43,7 +43,8 @@ class RequestHandlerTest {
 
         //TODO#8-3-7  counter.incrementAndGet(); 호출하는 countExecutable 구현 합니다.
         Executable countExecutable = ()->{
-            counter.incrementAndGet();
+            int count = counter.incrementAndGet();
+            log.debug("count : {}", count);
         };
 
 
@@ -51,7 +52,8 @@ class RequestHandlerTest {
         Thread producer = new Thread(()->{
             for(int i=1; i<=5; i++){
                 try {
-                    countExecutable.execute();
+                    Thread.sleep(1000);
+                    requestChannel.addRequest(countExecutable);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

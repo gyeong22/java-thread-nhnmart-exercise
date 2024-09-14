@@ -70,7 +70,6 @@ class RequestChannelTest {
 
         RequestChannel requestChannel = new RequestChannel(10);
 
-
         Thread thread = new Thread(()->{
             //TODO#8-2-11 requestChannel에 11개의 빈 작업을 등록하는 thread를 구현 하세요. 빈 작업: ()->{}
             for (int i=0; i < 11; i++){
