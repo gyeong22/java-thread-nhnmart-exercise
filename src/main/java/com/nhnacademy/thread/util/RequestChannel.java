@@ -12,9 +12,12 @@
 
 package com.nhnacademy.thread.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
+@Slf4j
 public class RequestChannel {
 
     //Executable type의 Queue
@@ -46,22 +49,29 @@ public class RequestChannel {
             try {
                 wait();
             }catch (InterruptedException e){
-
+                log.error("request add stop");
             }
         }
 
         //TODO#8-2-5 requestQueue에  executable(작업) 추가하고 대기하고 있는 thread를 깨웁니다.
-
+        requestQueue.add(executable);
+        notifyAll();
     }
 
     public synchronized Executable getRequest(){
         //TODO#8-2-6 while 조건을 수정하세요. requestQueue가 비어 있다면(작업할 것이 없다면) 대기 합니다.
-        while(true){
-
+        while(requestQueue.isEmpty()){
+            try {
+                wait();
+            }catch (InterruptedException e){
+                log.error("request get stop");
+            }
         }
 
         //TODO#8-2-7 requestQueue에서 Executable(작업)을 반환 하고 , 대기하고 있는 thread를 깨웁 니다.
-
+        Executable executable = requestQueue.poll();
+        notifyAll();
+        return  executable;
     }
 
 }
