@@ -28,7 +28,7 @@ public class Customer {
 
     public Customer(long id, String name, int money) {
         //TODO#1-1 id < 1 or name null or ""  or money <0 이면 IllegalArgumentException 이 발생 합니다.
-        if (id < 1 || (name == null || name.isEmpty()) || money < 0){
+        if (id < 1 || StringUtils.isEmpty(name) || money < 0){
             throw new IllegalArgumentException();
         }
 
@@ -40,17 +40,17 @@ public class Customer {
 
     public long getId() {
         //TODO#1-3 method를 구현하세요, id를 반환 합니다.
-        return this.id;
+        return id;
     }
 
     public String getName() {
         //TODO#1-4 method를 구현하세요, name을 반환 합니다.
-        return this.name;
+        return name;
     }
 
     public int getMoney() {
         //TODO#1-5 method를 구현하세요, money를 반환 합니다.
-        return this.money;
+        return money;
     }
 
 
@@ -81,6 +81,9 @@ public class Customer {
     //TODO#1-10 customer객체 비교를 위해서(비교 기준은 id, name, money 일치)
     @Override
     public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
         Customer customer = (Customer) o;
         return (this.id == customer.id) &&
                 Objects.equals(this.name, customer.name) &&
