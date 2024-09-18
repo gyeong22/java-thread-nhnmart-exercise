@@ -84,6 +84,9 @@ public class Customer {
         if (this == o)
             return true;
 
+        if (o == null || getClass() != o.getClass())
+            return false;
+
         Customer customer = (Customer) o;
         return (this.id == customer.id) &&
                 Objects.equals(this.name, customer.name) &&
